@@ -105,7 +105,7 @@ private:
             heapifyDown(largest);
         }
     }
-     void heapifyDownmn(int index)
+    void heapifyDownmn(int index)
     {
         int l = index * 2;
         int r = index * 2 + 1;
@@ -321,8 +321,8 @@ public:
             cout << "No bills to process." << endl;
             return;
         }
-		//my id is 96 so 96%9 = 6
-        if(counter==6)
+		
+        if(counter==8)
         {
             Bill mn = heapmn[1];
             int idx = 1;
