@@ -88,6 +88,13 @@ static Node *remove(Node* root, string s, int depth = 0)
     return root;
 }
 
+void clear(Node* root)
+{
+    for(int i=0;i<26;i++) if(root->child[i]) clear(root->child[i]);
+    delete root;
+}
+
+
 int main()
 {
     Node* node = new Node();
