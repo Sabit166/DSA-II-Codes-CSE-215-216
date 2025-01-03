@@ -111,3 +111,12 @@ int main()
 
     display(node);
 }
+
+ /***************************************************
+  *          Crafted by: SABIT                      *
+  *          Github: Sabit 166                      *
+  *                                                 *
+  * "Programs must be written for people to read,   *
+  * and only incidentally for machines to execute." *
+  * - Harold Abelson                                *
+  ***************************************************/

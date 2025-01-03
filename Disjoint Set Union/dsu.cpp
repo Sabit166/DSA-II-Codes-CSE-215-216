@@ -47,6 +47,18 @@ class DSU
 
         if(u == v) rank[u]++;
     }
+
+    void union_by_size(int u, int v)
+    {
+        u = find_set(u);
+        v = find_set(v);
+
+        if(u == v) return;
+
+        if(size[v] > size[u]) swap(u, v);
+        parent[v] = u;
+        size[u]+=size[v];
+    }
 };
 
 int main()

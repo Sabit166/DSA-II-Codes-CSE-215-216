@@ -2,7 +2,7 @@
 using namespace std;
 #define int long long
 
-int main() {
+signed main() {
     int n, m;
     cin >> n >> m;
     vector<pair<int, int>> adj[n];
@@ -13,7 +13,7 @@ int main() {
         adj[v].push_back({u, w});
     }
     int src = 0;
-    vector<int> key(n, INT_MAX);
+    vector<int> key(n, LLONG_MAX);
     vector<int> parent(n, -1);
     vector<bool> mst(n, false);
     key[src] = 0;
