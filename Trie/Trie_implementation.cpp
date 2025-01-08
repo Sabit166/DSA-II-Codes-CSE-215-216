@@ -3,120 +3,188 @@ using namespace std;
 
 struct Node
 {
-    bool wordEnd;
-    Node *child[26];
-    Node()
-    {
-        wordEnd = false;
-        for (int i = 0; i < 26; i++)
-            child[i] = NULL;
-    }
+       bool EoW;
+       Node *children[26];
+
+       Node()
+       {
+              EoW = false;
+              for (int i = 0; i < 26; i++)
+              {
+                     children[i] = nullptr;
+              }
+       }
 };
 
-void insert(Node* root, string s)
+class Trie
 {
-    Node *cur = root;
-    for (auto &it : s)
-    {
-        if (!cur->child[it - 'a'])
-        {
-            Node *newNode = new Node();
-            cur->child[it - 'a'] = newNode;
-        }
-        cur = cur->child[it - 'a'];
-    }
-    cur->wordEnd = true;
-}
+public:
+       Node *root;
 
-bool searchKey(Node* root, string s)
-{
-    if (!root)
-        return false;
+       Trie()
+       {
+              root = new Node();
+       }
 
-    Node *cur = root;
-    for (auto &it : s)
-    {
-        cur = cur->child[it - 'a'];
-        if (!cur)
-            return false;
-    }
-    return cur->wordEnd;
-}
+       void insert(string s)
+       {
+              Node *cur = root;
+              for (int i = 0; i < s.size(); i++)
+              {
+                     int j = s[i] - 'a'; // relative position
+                                         // small a a - a = 0
+                                         // b, b - a = 1
+                     if (cur->children[j] == nullptr)
+                     { // dont have an edge for corrosponding alphabet, will have to create one
+                            cur->children[j] = new Node();
+                     }
+                     cur = cur->children[j];
+              }
+              cur->EoW = true; // after whole string iteration done, word set so EoW set
+       }
 
-bool isEmpty(Node* root)
-{
-    for(int i=0;i<26;i++)
-    {
-        if(root->child[i]) return false;
-    }
-    return true;
-}
+       void printt(Node *cur, string s = " ")
+       {
+              // like DFS
+              // trie traverse and print all of the word
+              // lexicographic order
+              if (cur->EoW)
+              {
+                     // reached at the end of the word, so print the word
+                     cout << s << endl;
+              }
+              for (int i = 0; i < 26; i++)
+              { // iterate through all children
+                     if (cur->children[i] == nullptr)
+                            continue; // if null found skip
 
-void display(Node* root, string s = "")
-{
-    if(root->wordEnd)
-    {
-        cout << s << endl;
-    }
+                     char ch = i + 'a'; // relative position of current char
+                     // recursively call to print
+                     printt(cur->children[i], s + ch);
+              }
+       }
 
-    for(int i=0;i<26;i++) if(root->child[i]) display(root->child[i], s+char('a' + i));
-}
+       bool search(string s)
+       {
+              Node *cur = root;
+              for (int i = 0; i < s.size(); i++)
+              {
+                     int j = s[i] - 'a';
+                     if (cur->children[j] == nullptr)
+                     {
+                            return false;
+                     }
+                     cur = cur->children[j];
+              }
+              return cur->EoW;
+       }
 
-static Node *remove(Node* root, string s, int depth = 0)
-{
-    if(!root) return NULL;
+       bool delHelper(string s, Node *cur, int curSize)
+       {
+              if (!cur)
+                     return false; // current node null, word not found
+              if (curSize == s.size())
+              { // reached at the end of the word
+                     if (!cur->EoW)
+                            return false; // word does not exist
+                     if (!isLeaf(cur))
+                     {                        // if current node not a leaf
+                            cur->EoW = false; // unmark the word
+                            return false;
+                     }
+                     return true; // current is leaf node
+              }
 
-    if(depth == s.size())
-    {
-        root->wordEnd = false;
-        if(isEmpty(root))
-        {
-            delete root;
-            root = NULL;
-        }
-        return root;
-    }
+              int j = s[curSize] - 'a'; // relative index for current
+              if (delHelper(s, cur->children[j], curSize + 1))
+                     removeEdge(cur, s[curSize], true); // remove the edge to the child node                        // recursively call delHelper for the next characters
 
-    int index = s[depth] - 'a';
-    root->child[index] = remove(root->child[index], s, depth+1);
+              return !isJunction(cur); // if current node is a junction, can't be deleted
+       }
 
-    if(!root->wordEnd and isEmpty(root))
-    {
-        delete root;
-        root = NULL;
-    }
-    return root;
-}
+       bool isLeaf(Node *cur)
+       {
+              for (int i = 0; i < 26; i++)
+              {
+                     if (cur->children[i])
+                            return false; // child exists so not leaf
+              }
+              return true; // no child exists so leaf
+       }
 
-void clear(Node* root)
-{
-    for(int i=0;i<26;i++) if(root->child[i]) clear(root->child[i]);
-    delete root;
-}
+       bool isJunction(Node *cur)
+       {
+              if (cur->EoW == 1)
+                     return true; // if at the edn of the word then junction
+              if (isLeaf(cur))
+                     return false; // leaf not junction
+              return true;
+       }
 
+       void removeEdge(Node *cur, char c, int flag)
+       {
+              if (flag == 0)
+                     return;                // do nothing
+              int j = c - 'a';              // relative index
+              Node *del = cur->children[j]; // retrive the child node
+              cur->children[j] = nullptr;   // remove edge to the child node
+              delete del;                   // delete the child node
+       }
+
+       int deleteWord(string s)
+       {
+              return delHelper(s, root, 0); // call delete helper starting from root node
+       }
+};
 
 int main()
 {
-    Node* node = new Node();
-    insert(node, "safi");
-    //insert(node,"sabbir");
+       Trie t;
+       int c;
+       while (1)
+       {
+              cout << "1.Insert" << endl;
+              cout << "2.Print" << endl;
+              cout << "3.Search" << endl;
+              cout << "4.Delete" << endl;
+              cout << "Press any other to terminate." << endl;
 
-    if(searchKey(node, "mehu")) cout << "Word found.\n";
-    else cout << "word not found.\n";
+              cout << "Enter your choice:" << endl;
 
-    //node = remove(node, "sabit");
-    if(searchKey(node, "sabbir")) cout << "Word found.\n";
-    else cout << "word not found.\n";
-    insert(node, "sabit");
-
-    display(node);
+              cin >> c;
+              if (c == 1)
+              {
+                     string s;
+                     cout << "Enter the word to be inserted:" << endl;
+                     cin >> s;
+                     t.insert(s);
+              }
+              else if (c == 2)
+              {
+                     t.printt(t.root);
+              }
+              else if (c == 3)
+              {
+                     cout << "Enter the word to be searched:";
+                     string s;
+                     cin >> s;
+                     if (t.search(s))
+                            cout << "Found" << endl;
+                     else
+                            cout << "Not found" << endl;
+              }
+              else if (c == 4)
+              {
+                     cout << "Enter the word to be deleted:" << endl;
+                     string s;
+                     cin >> s;
+                     t.deleteWord(s);
+              }
+              else
+              {
+                     cout << "terminated";
+                     break;
+              }
+       }
+       return 0;
 }
-
- /***************************************************
-  *          Crafted by: SABIT                      *
-  *          Github: Sabit 166                      *
-  *                                                 *
-  * "Programs must be written for people to read,   *
-  * and only incidentally for machines to execute." *
-  * - Harold Abelson                                *
-  ***************************************************/
