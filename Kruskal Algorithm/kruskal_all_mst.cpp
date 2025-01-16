@@ -36,14 +36,11 @@ bool union_sets(int a, int b) {
     return false;
 }
 
-void backtrack(int index, int edges_used, int n, vector<Edge>& edges, vector<Edge>& mst, vector<vector<Edge>>& all_msts) 
+void backtrack(int index, int edges_used, int vertices, vector<Edge>& edges, vector<Edge>& mst, vector<vector<Edge>>& all_msts) 
 {
-    if (edges_used == n - 1) {
+    if (edges_used == vertices - 1) {
         // A valid MST is formed when the number of edges used is equal to n - 1
-        for (auto& edge : mst) {
-            cout << edge.u << " - " << edge.v << " : " << edge.weight << endl;
-        }
-        cout << "-----------------" << endl;
+        all_msts.push_back(mst);
         return;
     }
     if (index == edges.size())
@@ -52,12 +49,12 @@ void backtrack(int index, int edges_used, int n, vector<Edge>& edges, vector<Edg
     Edge edge = edges[index];
     if (union_sets(edge.u, edge.v)) {
         mst.push_back(edge);
-        backtrack(index + 1, edges_used + 1, n, edges, mst, all_msts);
+        backtrack(index + 1, edges_used + 1, vertices, edges, mst, all_msts);
         mst.pop_back();
         parent[edge.u] = edge.u;
         parent[edge.v] = edge.v;
     }
-    backtrack(index + 1, edges_used, n, edges, mst, all_msts);
+    backtrack(index + 1, edges_used, vertices, edges, mst, all_msts);
 }
 
 void kruskal_all_mst(int n, vector<Edge>& edges) {
