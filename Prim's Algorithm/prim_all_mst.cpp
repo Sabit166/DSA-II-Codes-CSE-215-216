@@ -58,7 +58,7 @@ public:
                 cout << parent[i] << " - " << i << " : " << key[i] << endl;
             }
         }
-        cout << "-----------------" << endl;
+        cout << "-------------------" << endl;
     }
 };
 

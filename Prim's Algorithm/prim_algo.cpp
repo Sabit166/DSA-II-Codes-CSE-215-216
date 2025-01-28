@@ -10,7 +10,7 @@ signed main() {
         int u, v, w;
         cin >> u >> v >> w;
         adj[u].push_back({v, w});
-        adj[v].push_back({u, w});
+        //adj[v].push_back({u, w});
     }
     int src = 0;
     vector<int> key(n, LLONG_MAX);

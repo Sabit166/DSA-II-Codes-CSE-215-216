@@ -2,6 +2,8 @@
 using namespace std;
 #define int long long
 
+vector<Edge> mst;
+vector<vector<Edge>> all_msts;
 struct Edge {
     int u, v, weight;
     bool operator<(Edge const& other) {
@@ -36,7 +38,7 @@ bool union_sets(int a, int b) {
     return false;
 }
 
-void backtrack(int index, int edges_used, int vertices, vector<Edge>& edges, vector<Edge>& mst, vector<vector<Edge>>& all_msts) 
+void backtrack(int index, int edges_used, int vertices, vector<Edge>& edges) 
 {
     if (edges_used == vertices - 1) {
         // A valid MST is formed when the number of edges used is equal to n - 1
@@ -49,23 +51,21 @@ void backtrack(int index, int edges_used, int vertices, vector<Edge>& edges, vec
     Edge edge = edges[index];
     if (union_sets(edge.u, edge.v)) {
         mst.push_back(edge);
-        backtrack(index + 1, edges_used + 1, vertices, edges, mst, all_msts);
+        backtrack(index + 1, edges_used + 1, vertices, edges);
         mst.pop_back();
         parent[edge.u] = edge.u;
         parent[edge.v] = edge.v;
     }
-    backtrack(index + 1, edges_used, vertices, edges, mst, all_msts);
+    backtrack(index + 1, edges_used, vertices, edges);
 }
 
 void kruskal_all_mst(int n, vector<Edge>& edges) {
     sort(edges.begin(), edges.end());
-    vector<Edge> mst;
-    vector<vector<Edge>> all_msts;
 
     for (int i = 0; i < n; i++)
         make_set(i);
 
-    backtrack(0, 0 ,n ,  edges, mst, all_msts);
+    backtrack(0, 0 ,n ,  edges);
 
     for (auto& mst : all_msts) {
         for (auto& edge : mst) {

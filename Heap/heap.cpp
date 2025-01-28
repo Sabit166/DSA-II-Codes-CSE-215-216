@@ -33,8 +33,21 @@ class Heap
 
     void heapify_down(int i)
     {
-        int largest = heap[i];
-        if(left(i) < heap.size() && )
+        int largest = i;
+        if(left(i) < heap.size() && heap[left(i)] > heap[largest])
+        {
+            largest = left(i);
+        }
+        if(right(i) < heap.size() && heap[right(i)] > heap[largest])
+        {
+            largest = right(i);
+        }
+
+        if(i != largest)
+        {
+            swap(heap[i], heap[largest]);
+            heapify_down(largest);
+        }
     }
 
     public:
@@ -59,7 +72,26 @@ class Heap
 };
 
 signed main() {
-
+    Heap h;
+    int choice, value;
+    while (true) {
+        cout << "1. Insert\n2. Delete Max\n3. Exit\nEnter your choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1:
+                cout << "Enter value to insert: ";
+                cin >> value;
+                h.insert(value);
+                break;
+            case 2:
+                h.delete_max();
+                break;
+            case 3:
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    }
 }
 
  /***************************************************
