@@ -1,104 +1,71 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
-#define int long long
 
+class Heap {
+    vector<int> heap;
 
-class Heap
-{
-    vector<int>heap;
-
-    int parent(int i)
-    {
+    int parent(int i) {
         return (i - 1) / 2;
     }
 
-    int left(int i)
-    {
-        return 2*i + 1;
+    int left(int i) {
+        return 2 * i + 1;
     }
 
-    int right(int i)
-    {
-        return 2*i + 2;
+    int right(int i) {
+        return 2 * i + 2;
     }
 
-    void heapify_up(int i)
-    {
-        if(i && heap[i] > heap[parent(i)])
-        {
-            swap(heap[i], heap[parent(i)]);
-            heapify_up(parent(i));
-        }
-    }
-
-    void heapify_down(int i)
-    {
+    void heapify_down(int i, int n) {
         int largest = i;
-        if(left(i) < heap.size() && heap[left(i)] > heap[largest])
-        {
-            largest = left(i);
-        }
-        if(right(i) < heap.size() && heap[right(i)] > heap[largest])
-        {
-            largest = right(i);
-        }
+        int l = left(i);
+        int r = right(i);
 
-        if(i != largest)
-        {
+        if (l < n && heap[l] > heap[largest])
+            largest = l;
+
+        if (r < n && heap[r] > heap[largest])
+            largest = r;
+
+        if (largest != i) {
             swap(heap[i], heap[largest]);
-            heapify_down(largest);
+            heapify_down(largest, n);
         }
     }
 
-    public:
-    void insert(int n)
-    {
-        heap.push_back(n);
-        heapify_up(heap.size() -1 );
+    void buildHeap(vector<int>& arr) {
+        heap = arr;
+        int n = heap.size();
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify_down(i, n);
+        }
     }
 
-    void delete_max()
-    {
-        if(!heap.size())
-        {
-            cout << "Heap empty.\n";
-            return;
+public:
+    void heapSort(vector<int>& arr) {
+        buildHeap(arr);
+        int n = heap.size();
+        for (int i = n - 1; i > 0; i--) {
+            swap(heap[0], heap[i]);
+            heapify_down(0, i);
         }
-
-        heap[0] = heap.back();
-        heap.pop_back();
-        heapify_down(0);
+        arr = heap;
     }
 };
 
-signed main() {
-    Heap h;
-    int choice, value;
-    while (true) {
-        cout << "1. Insert\n2. Delete Max\n3. Exit\nEnter your choice: ";
-        cin >> choice;
-        switch (choice) {
-            case 1:
-                cout << "Enter value to insert: ";
-                cin >> value;
-                h.insert(value);
-                break;
-            case 2:
-                h.delete_max();
-                break;
-            case 3:
-                return 0;
-            default:
-                cout << "Invalid choice. Please try again.\n";
-        }
-    }
+void printArray(vector<int>& arr) {
+    for (int i = 0; i < arr.size(); ++i)
+        cout << arr[i] << " ";
+    cout << "\n";
 }
 
- /***************************************************
-  *          Crafted by: SABIT                      *
-  *          Github: Sabit 166                      *
-  *                                                 *
-  * "Programs must be written for people to read,   *
-  * and only incidentally for machines to execute." *
-  * - Harold Abelson                                *
-  ***************************************************/
+int main() {
+    vector<int> arr = {12, 11, 13, 5, 6, 7};
+    Heap h;
+    h.heapSort(arr);
+
+    cout << "Sorted array is \n";
+    printArray(arr);
+    return 0;
+}
