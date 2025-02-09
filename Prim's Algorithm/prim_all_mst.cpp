@@ -25,14 +25,15 @@ public:
         adj[v].push_back({u, w});
     }
 
-    void printAllMSTs() {
+    void printMST() {
         vector<bool> inMST(V, false);
         vector<int> key(V, INT_MAX);
         vector<int> parent(V, -1);
         priority_queue<WeightedEdge, vector<WeightedEdge>, greater<WeightedEdge>> pq;
 
-        key[0] = 0;
-        pq.push({0, {0, 0}});
+        int src = 0;
+        key[src] = 0;
+        pq.push({0, {src, src}});
 
         while (!pq.empty()) {
             int u = pq.top().edge.second;
@@ -41,10 +42,11 @@ public:
             if (inMST[u]) continue;
             inMST[u] = true;
 
-            for (const auto &edge : adj[u]) {
+            for (auto& edge : adj[u]) {
                 int v = edge.v;
                 int weight = edge.weight;
-                if (!inMST[v] && key[v] > weight) {
+
+                if (!inMST[v] && weight < key[v]) {
                     key[v] = weight;
                     pq.push({key[v], {u, v}});
                     parent[v] = u;
@@ -52,27 +54,25 @@ public:
             }
         }
 
-        // Print the MST
         for (int i = 1; i < V; ++i) {
-            if (parent[i] != -1) {
-                cout << parent[i] << " - " << i << " : " << key[i] << endl;
-            }
+            cout << parent[i] << " - " << i << " : " << key[i] << endl;
         }
-        cout << "-------------------" << endl;
     }
 };
 
 int main() {
-    int V, E;
-    cin >> V >> E;
+    int V = 5;
     Graph g(V);
-    for (int i = 0; i < E; ++i) {
-        int u, v, w;
-        cin >> u >> v >> w;
-        g.addEdge(u, v, w);
-    }
 
-    g.printAllMSTs();
+    g.addEdge(0, 1, 2);
+    g.addEdge(0, 3, 6);
+    g.addEdge(1, 2, 3);
+    g.addEdge(1, 3, 8);
+    g.addEdge(1, 4, 5);
+    g.addEdge(2, 4, 7);
+    g.addEdge(3, 4, 9);
+
+    g.printMST();
 
     return 0;
 }
