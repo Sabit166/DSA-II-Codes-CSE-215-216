@@ -49,7 +49,7 @@ void mergeSort(std::vector<int> &arr, int left, int right)
 {
     if (left >= right)
         return;
-    int mid = left + (right - left) / 2;
+    int mid = (left + right)/2;
 
     mergeSort(arr, left, mid);
     mergeSort(arr, mid + 1, right);
@@ -59,7 +59,7 @@ void mergeSort(std::vector<int> &arr, int left, int right)
 
 int main()
 {
-    std::vector<int> arr = {12, 11, 13, 5, 6, 7};
+    std::vector<int> arr = {12, 11, 13, 5, 6};
     int arr_size = arr.size();
 
     std::cout << "Given array is \n";
