@@ -25,10 +25,6 @@ struct Student
     int dsa;
     int c;
     double credits;
-    Student()
-    {
-        
-    }
 };
 
 bool compare(Student *a, Student *b)
