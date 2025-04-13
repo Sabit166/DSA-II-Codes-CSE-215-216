@@ -54,7 +54,18 @@ int Fractional_Knapsack(int n, int w, vector<Item>&items)
         }
     }
 }
+int NonFractional_Knapsack(int n, int w, vector<Item>& items)
+{
+    if (n == 0 || w == 0)
+        return 0;
 
+    if (items[n-1].weight > w)
+        return NonFractional_Knapsack(n-1, w, items);
+
+    else
+        return max(items[n-1].value + NonFractional_Knapsack(n-1, w - items[n-1].weight, items),
+                   NonFractional_Knapsack(n-1, w, items));
+}
 int main()
 {
     int n, w;
