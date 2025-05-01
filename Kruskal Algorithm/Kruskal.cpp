@@ -38,7 +38,9 @@ signed main() {
         graph[i] = Edge(u, v, w);
     }
 
-    sort(graph.begin(), graph.end());
+    sort(gr
+        
+        aph.begin(), graph.end());
 
     for(Edge edge: graph)
     {

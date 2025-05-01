@@ -3,7 +3,7 @@ using namespace std;
 
 class Item
 {
-    public:
+public:
     int value;
     int weight;
     float ratio;
@@ -28,21 +28,21 @@ class Item
     }
 };
 
-void print(vector<Item>items)
+void print(vector<Item> items)
 {
     cout << "Value\tWeight\tRatio\n";
-    for(int i=0;i<items.size();i++)
+    for (int i = 0; i < items.size(); i++)
     {
         cout << items[i].value << "\t" << items[i].weight << "\t" << items[i].ratio << endl;
     }
 }
 
-int Fractional_Knapsack(int n, int w, vector<Item>&items)
+int Fractional_Knapsack(int n, int w, vector<Item> &items)
 {
     sort(items.begin(), items.end());
-    for(int i=0;i<items.size();i++)
+    for (int i = 0; i < items.size(); i++)
     {
-        if(w>items[i].weight)
+        if (w > items[i].weight)
         {
             w -= items[i].weight;
             items[i].weight = 0;
@@ -54,18 +54,41 @@ int Fractional_Knapsack(int n, int w, vector<Item>&items)
         }
     }
 }
-int NonFractional_Knapsack(int n, int w, vector<Item>& items)
+int NonFractional_Knapsack(int n, int w, vector<Item> &items)
 {
     if (n == 0 || w == 0)
         return 0;
 
-    if (items[n-1].weight > w)
-        return NonFractional_Knapsack(n-1, w, items);
+    if (items[n - 1].weight > w)
+        return NonFractional_Knapsack(n - 1, w, items);
 
     else
-        return max(items[n-1].value + NonFractional_Knapsack(n-1, w - items[n-1].weight, items),
-                   NonFractional_Knapsack(n-1, w, items));
+        return max(items[n - 1].value + NonFractional_Knapsack(n - 1, w - items[n - 1].weight, items),
+                   NonFractional_Knapsack(n - 1, w, items));
 }
+
+int ZeroOneKnapsack(int n, int w, vector<Item> &items)
+{
+    vector<vector<int>> dp(n + 1, vector<int>(w + 1, 0));
+
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= w; j++)
+        {
+            if (items[i - 1].weight <= j)
+            {
+                dp[i][j] = max(items[i - 1].value + dp[i - 1][j - items[i - 1].weight], dp[i - 1][j]);
+            }
+            else
+            {
+                dp[i][j] = dp[i - 1][j];
+            }
+        }
+    }
+
+    return dp[n][w];
+}
+
 int main()
 {
     int n, w;
@@ -74,12 +97,12 @@ int main()
     cout << "Enter size of knapsack (w): ";
     cin >> w;
 
-    vector<Item>items;
+    vector<Item> items;
 
-    for(int i=0;i<n;i++)
+    for (int i = 0; i < n; i++)
     {
         int v, w;
-        cout << "Enter value and weight of item " << i+1 << ": ";
+        cout << "Enter value and weight of item " << i + 1 << ": ";
         cin >> v >> w;
         items.push_back(Item(v, w));
     }

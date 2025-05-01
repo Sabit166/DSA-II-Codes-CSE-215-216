@@ -115,7 +115,7 @@ public:
        bool isJunction(Node *cur)
        {
               if (cur->EoW == 1)
-                     return true; // if at the edn of the word then junction
+                     return true; // if at the end of the word then junction
               if (isLeaf(cur))
                      return false; // leaf not junction
               return true;

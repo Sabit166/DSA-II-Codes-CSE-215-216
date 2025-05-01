@@ -25,13 +25,26 @@ int matrixMultiplication(vector<int> &arr) {
         }
     }
 
+    // Print the DP table
+    cout << "DP Table:" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dp[i][j] == 0)
+                cout << setw(5) << "-";
+            else
+                cout << setw(5) << dp[i][j];
+        }
+        cout << endl;
+    }
+
     // The minimum cost is stored in dp[0][n-1]
     return dp[0][n - 1];
 }
 
 int main() {
   
-    vector<int> arr = {1, 2, 3, 4, 3};
+    vector<int> arr = {30, 35, 15, 5, 10, 20, 25};
+    // The dimensions of the matrices are given by the array
     cout << matrixMultiplication(arr);
     return 0;
 }
